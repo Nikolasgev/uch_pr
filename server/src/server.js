@@ -141,7 +141,10 @@ app.post('/api/download', async (req, res, next) => {
 const clientDistPath = path.resolve(__dirname, '../../client/dist');
 if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
-  app.get('*', (_req, res) => {
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' || req.path.startsWith('/api')) {
+      return next();
+    }
     res.sendFile(path.join(clientDistPath, 'index.html'));
   });
 }
