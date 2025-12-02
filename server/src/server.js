@@ -93,7 +93,7 @@ app.post('/api/download', async (req, res, next) => {
       upstreamResponse = await fetch(resource.url, {
         signal: controller.signal,
         headers: {
-          'User-Agent': 'uch-pr-proxy/1.0 (+https://github.com/)',
+          'User-Agent': 'uch-pr-proxy/1.0 (offline-harvester)',
           Accept: '*/*'
         }
       });

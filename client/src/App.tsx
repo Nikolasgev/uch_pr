@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import type { FormEvent } from 'react';
 import './App.css';
 
 type KeywordSummary = {
@@ -69,6 +70,9 @@ function App() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [downloadState, setDownloadState] = useState<DownloadState>(null);
   const [library, setLibrary] = useState<SavedContent[]>(() => {
+    if (typeof window === 'undefined') {
+      return [];
+    }
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (!raw) return [];
@@ -86,6 +90,7 @@ function App() {
   );
 
   useEffect(() => {
+    if (typeof window === 'undefined') return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(library));
   }, [library]);
 
@@ -100,7 +105,13 @@ function App() {
       })
       .then((payload) => {
         if (!isMounted) return;
-        setAvailableKeywords(payload.keywords ?? []);
+        const keywords = Array.isArray(payload.keywords)
+          ? [...(payload.keywords as KeywordSummary[])]
+          : [];
+        keywords.sort((a: KeywordSummary, b: KeywordSummary) =>
+          a.keyword.localeCompare(b.keyword)
+        );
+        setAvailableKeywords(keywords);
       })
       .catch((error) => {
         if (!isMounted) return;
@@ -148,7 +159,7 @@ function App() {
     }
   };
 
-  const handleKeywordSubmit = async (event: React.FormEvent) => {
+  const handleKeywordSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const normalizedKeyword = keywordInput.trim().toLowerCase();
     if (!normalizedKeyword) {

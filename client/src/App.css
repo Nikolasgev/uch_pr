@@ -341,6 +341,7 @@ body {
   padding: 1rem;
   font-size: 0.9rem;
   line-height: 1.4;
+  white-space: pre-wrap;
 }
 
 @media (max-width: 600px) {
