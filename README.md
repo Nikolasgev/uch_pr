@@ -1,5 +1,7 @@
 ## Remote Content Harvester
 
+**Production demo:** https://uch-pr-1.onrender.com/
+
 Полноценный пример клиент-серверного приложения, которое:
 
 - хранит на сервере соответствие ключевых слов и списка внешних URL;
